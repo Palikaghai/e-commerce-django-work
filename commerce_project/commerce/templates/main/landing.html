@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section style="background: linear-gradient(180deg, #fce4ec 0%, #ffffff 100%); padding: 80px 20px; text-align: center; border-radius: 0 0 40px 40px;">
+    {% if user.is_authenticated %}
+        <h1 style="font-size: 2.5rem; color: #333; margin-bottom: 10px;">Welcome Back, {{ user.username }}!</h1>
+        <p style="font-size: 1.1rem; color: #555; margin-bottom: 25px;">Your personalized glow-up routine is ready.</p>
+        <a href="{% url 'cart_detail' %}" style="background: #333; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">View My Cart 🛒</a>
+    {% else %}
+        <h1 style="font-size: 3.5rem; color: #333; margin-bottom: 15px; font-weight: 800;">Unlock Your Natural Glow</h1>
+        <p style="font-size: 1.2rem; color: #555; max-width: 600px; margin: 0 auto 30px; line-height: 1.6;">Premium serums and SPF essentials delivered to your door with love and care.</p>
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            <a href="#" id="openSignupInline" style="background: #e91e63; color: white; padding: 15px 35px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);">Join Now</a>
+            <a href="#" id="openSignupInline2" style="color: #e91e63; font-weight: bold; text-decoration: none; padding: 15px;">Sign In</a>
+        </div>
+    {% endif %}
+</section>
+
+<div style="max-width: 750px; margin: -35px auto 60px; padding: 0 20px;">
+    <form action="{% url 'product_list' %}" method="get" style="display: flex; background: white; border-radius: 50px; padding: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #eee;">
+        <input type="text" name="q" placeholder="Search for serums, SPF, cleansers..." style="flex: 1; border: none; padding: 10px 25px; border-radius: 40px; outline: none; font-size: 1.1rem;">
+        <button type="submit" style="background: #e91e63; border: none; color: white; padding: 10px 35px; border-radius: 40px; cursor: pointer; font-weight: bold; transition: 0.3s;" onmouseover="this.style.background='#c2185b'" onmouseout="this.style.background='#e91e63'">Search</button>
+    </form>
+</div>
+
+<div style="max-width: 1200px; margin: 0 auto 80px; padding: 0 5%; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: center;">
+    <div>
+        <div style="font-size: 2rem; margin-bottom: 10px;">🚚</div>
+        <h4 style="margin: 0; color: #333;">Fast Delivery</h4>
+        <p style="font-size: 0.9rem; color: #777;">Within 3-5 business days</p>
+    </div>
+    <div>
+        <div style="font-size: 2rem; margin-bottom: 10px;">🌿</div>
+        <h4 style="margin: 0; color: #333;">100% Organic</h4>
+        <p style="font-size: 0.9rem; color: #777;">Dermatologically tested</p>
+    </div>
+    <div>
+        <div style="font-size: 2rem; margin-bottom: 10px;">🛡️</div>
+        <h4 style="margin: 0; color: #333;">Secure Payment</h4>
+        <p style="font-size: 0.9rem; color: #777;">100% safe transactions</p>
+    </div>
+</div>
+
+<div style="max-width: 1200px; margin: 0 auto 80px; padding: 0 5%;">
+    <h2 style="text-align: center; font-size: 2rem; color: #222; margin-bottom: 45px;">Shop By <span style="color: #e91e63;">Skin Type</span></h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 25px; justify-items: center;">
+        {% for skin in skin_types %}
+            <a href="{% url 'product_list' %}?skin_type={{ skin.name }}" style="text-decoration: none; text-align: center;">
+                <div style="transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="{{ skin.img }}" alt="{{ skin.name }}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #fce4ec; box-shadow: 0 8px 20px rgba(0,0,0,0.06);">
+                    <h5 style="margin-top: 15px; color: #333; font-size: 1.1rem; font-weight: 600;">{{ skin.name }}</h5>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<hr style="border: 0; height: 1px; background: #f0f0f0; margin: 0 5%;">
+
+<div style="max-width: 1200px; margin: 80px auto; padding: 0 5%;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+        <h2 style="margin: 0; font-size: 2rem; color: #222;">Trending This Week 🔥</h2>
+        <a href="{% url 'product_list' %}" style="color: #e91e63; text-decoration: none; font-weight: 700; border-bottom: 2px solid #e91e63;">View All Shop</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 35px;">
+        {% for product in trending %}
+            <div style="background: white; border: 1px solid #f2f2f2; border-radius: 25px; padding: 20px; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 5px 15px rgba(0,0,0,0.02);" onmouseover="this.style.boxShadow='0 15px 30px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='0 5px 15px rgba(0,0,0,0.02)'">
+                <div>
+                    <div style="width: 100%; aspect-ratio: 1/1; background: #fdfdfd; border-radius: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #fafafa;">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" style="width: 100%; height: 100%; object-fit: contain; padding: 15px;">
+                        {% else %}
+                            <span style="color: #ccc;">No Image</span>
+                        {% endif %}
+                    </div>
+                    <small style="color: #e91e63; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">{{ product.brand }}</small>
+                    <h4 style="margin: 8px 0 12px; color: #333; font-size: 1.1rem; line-height: 1.4; height: 2.8em; overflow: hidden; font-weight: 600;">{{ product.name }}</h4>
+                </div>
+                <div>
+                    <p style="font-weight: 800; font-size: 1.3rem; color: #222; margin-bottom: 20px;">₹{{ product.price }}</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <a href="{% url 'product_detail' product.id %}" style="text-align: center; text-decoration: none; color: #555; border: 1.5px solid #eee; padding: 12px; border-radius: 12px; font-size: 0.9rem; font-weight: bold; transition: 0.2s;" onmouseover="this.style.background='#f9f9f9'" onmouseout="this.style.background='transparent'">Info</a>
+                        <a href="{% url 'add_to_cart' product.id %}" style="text-align: center; text-decoration: none; background: #222; color: white; padding: 12px; border-radius: 12px; font-size: 0.9rem; font-weight: bold; transition: 0.3s;" onmouseover="this.style.background='#444'">+ Cart</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Featured Brands & Testimonials -->
+<section class="brands-testimonials">
+    <div class="brands">
+        <h3 style="margin-bottom:10px;">Featured Brands</h3>
+        <div class="brand-list">
+            <div class="brand-card">Brand A</div>
+            <div class="brand-card">Brand B</div>
+            <div class="brand-card">Brand C</div>
+            <div class="brand-card">Brand D</div>
+        </div>
+    </div>
+
+    <div class="testimonials">
+        <h3 style="margin-bottom:10px;">What customers say</h3>
+        <div class="testimonial-slider" id="testimonialSlider">
+            <div class="slides">
+                <div class="testimonial"><p>"Amazing products — my skin has never been happier!"</p><p class="author">— Satisfied Customer</p></div>
+                <div class="testimonial"><p>"Packaging was lovely and product quality is top-notch."</p><p class="author">— Anika P.</p></div>
+                <div class="testimonial"><p>"Noticeable results in two weeks. Love it!"</p><p class="author">— Varun M.</p></div>
+            </div>
+        </div>
+        <div class="testimonial-controls" aria-hidden="false">
+            <button id="prevTestimonial">‹</button>
+            <div class="dots" id="testimonialDots"></div>
+            <button id="nextTestimonial">›</button>
+        </div>
+    </div>
+</section>
+
+<div style="max-width: 1200px; margin: 0 auto 80px; padding: 60px 40px; background: #333; border-radius: 40px; color: white; text-align: center;">
+    <h2 style="font-size: 2rem; margin-bottom: 15px;">Join the Glow Club ✨</h2>
+    <p style="color: #ccc; margin-bottom: 30px;">Get 10% off on your first order and exclusive skincare tips.</p>
+    <form method="post" action="{% url 'subscribe_newsletter' %}" style="display: flex; max-width: 500px; margin: 0 auto; gap: 10px;">
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="Enter your email" required style="flex: 1; padding: 15px 20px; border-radius: 30px; border: none; outline: none;">
+        <button type="submit" style="background: #e91e63; color: white; border: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; cursor: pointer;">Subscribe</button>
+    </form>
+</div>
+
+<div style="background-color: #fafafa; padding: 100px 5%; border-radius: 60px 60px 0 0; max-width: 1400px; margin: 0 auto;">
+    <h2 style="text-align: center; font-size: 2.2rem; margin-bottom: 60px; font-weight: 700;">Shop By Concern</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto;">
+        {% for category in categories %}
+            <a href="{% url 'product_list' %}?category={{ category.id }}" style="text-decoration: none; color: inherit;">
+                <div style="background: white; padding: 45px 25px; text-align: center; border-radius: 25px; border: 1px solid #f0f0f0; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.02);" onmouseover="this.style.borderColor='#e91e63'; this.style.transform='translateY(-8px)';" onmouseout="this.style.borderColor='#f0f0f0'; this.style.transform='translateY(0)';" >
+                    <div style="font-size: 3rem; margin-bottom: 20px;">
+                        {% if "Sun" in category.name %}☀️{% elif "Serum" in category.name %}🧪{% elif "Wash" in category.name %}🧼{% elif "Lipsticks" in category.name %}💄{% elif "Deodorants" in category.name %}🧴{% elif "SkinCare" in category.name %}🧖🏻‍♀️{% else %}🫧{% endif %}
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.2rem; color: #333; font-weight: 700;">{{ category.name }}</h3>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

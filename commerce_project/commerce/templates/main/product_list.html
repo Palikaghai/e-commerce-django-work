@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width:1200px; margin:40px auto; padding:0 20px;">
+    <h1 style="margin-bottom:6px;">Shop All</h1>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:18px;">
+        <form method="get" style="flex:1; display:flex; gap:8px;">
+            <input type="text" name="q" placeholder="Search products or brands..." value="{{ query }}" style="flex:1; padding:12px 16px; border-radius:30px; border:1px solid #eee; box-shadow: 0 6px 20px rgba(233,30,99,0.03);">
+            <button type="submit" style="background:#e91e63; color:#fff; padding:10px 18px; border-radius:30px; border:none;">Search</button>
+        </form>
+
+        <div style="display:flex; gap:12px; align-items:center;">
+            <select onchange="location = this.value;" style="padding:8px 12px; border-radius:8px; border:1px solid #eee;">
+                <option value="{% url 'product_list' %}">All Categories</option>
+                {% for c in categories %}
+                <option value="{% url 'product_list' %}?category={{ c.id }}" {% if current_category and current_category.id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select onchange="location = this.value;" style="padding:8px 12px; border-radius:8px; border:1px solid #eee;">
+                <option value="{% url 'product_list' %}">All Skin Types</option>
+                <option value="{% url 'product_list' %}?skin_type=Oily" {% if current_skin == 'Oily' %}selected{% endif %}>Oily</option>
+                <option value="{% url 'product_list' %}?skin_type=Dry" {% if current_skin == 'Dry' %}selected{% endif %}>Dry</option>
+                <option value="{% url 'product_list' %}?skin_type=Sensitive" {% if current_skin == 'Sensitive' %}selected{% endif %}>Sensitive</option>
+                <option value="{% url 'product_list' %}?skin_type=Combination" {% if current_skin == 'Combination' %}selected{% endif %}>Combination</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Active filters -->
+    <div style="margin-bottom:14px;">
+        {% if current_category %}
+            <span style="background:#fce4ec; color:#e91e63; padding:6px 12px; border-radius:20px; font-weight:700;">Category: {{ current_category.name }}</span>
+        {% endif %}
+        {% if current_skin %}
+            <span style="background:#f3e8ff; color:#7b1fa2; padding:6px 12px; border-radius:20px; font-weight:700; margin-left:8px;">Skin Type: {{ current_skin }}</span>
+        {% endif %}
+        {% if query %}
+            <span style="background:#fff3e0; color:#ef6c00; padding:6px 12px; border-radius:20px; font-weight:700; margin-left:8px;">Query: "{{ query }}"</span>
+        {% endif %}
+    </div>
+
+    {% if products.exists %}
+    <div style="display:grid; gap:28px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+        {% for product in products %}
+        <div style="background:#fff; border-radius:18px; padding:18px; box-shadow:0 8px 26px rgba(12,18,32,0.04); display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="display:flex; gap:12px; align-items:center;">
+                <div style="width:84px; height:84px; background:#fafafa; border-radius:12px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" style="max-width:100%; max-height:100%; object-fit:contain;">
+                    {% else %}
+                        <span style="color:#ccc;">No Image</span>
+                    {% endif %}
+                </div>
+                <div>
+                    <small style="color:#e91e63; font-weight:700; text-transform:uppercase; font-size:0.75rem;">{{ product.brand }}</small>
+                    <h3 style="margin:6px 0 8px; font-size:1rem;">{{ product.name }}</h3>
+                    <div style="color:#777; font-size:0.9rem;">Skin: <strong>{{ product.skin_type }}</strong></div>
+                    <div style="color:#777; font-size:0.9rem;">Category: <strong>{{ product.category.name }}</strong></div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+                <div style="font-weight:800; font-size:1.1rem;">₹{{ product.price }}</div>
+                <div style="display:flex; gap:8px;">
+                    <a href="{% url 'product_detail' product.id %}" style="padding:8px 12px; border-radius:8px; border:1px solid #eee; text-decoration:none; color:#333;">Info</a>
+                    <a href="{% url 'add_to_cart' product.id %}" style="background:#222; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none;">+ Cart</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <div style="padding:40px 20px; background:#fff; border-radius:12px; text-align:center; color:#777;">No products found for the selected criteria.</div>
+    {% endif %}
+</div>
+{% endblock %}

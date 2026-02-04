@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width:1000px; margin: 40px auto; padding: 20px; display:flex; gap:30px;">
+    <div style="flex: 1;">
+        <div style="width:100%; background:#fff; border-radius:18px; padding:20px; display:flex; justify-content:center; align-items:center; height:420px;">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:100%; max-height:100%; object-fit:contain;">
+            {% else %}
+                <div style="color:#ccc;">No Image</div>
+            {% endif %}
+        </div>
+    </div>
+    <div style="flex:1.1;">
+        <h2 style="margin-top:0;">{{ product.brand }}</h2>
+        <h3 style="color:#333;">{{ product.name }}</h3>
+        <p style="font-weight:800; font-size:1.4rem;">₹{{ product.price }}</p>
+        <p style="color:#777;">Skin Type: <strong>{{ product.skin_type }}</strong></p>
+        <p style="color:#777;">Stock: <strong>{{ product.stock }}</strong></p>
+        <p style="margin-top:20px;">{{ product.ingredients|linebreaks }}</p>
+
+        <div style="margin-top:25px; display:flex; gap:12px;">
+            <a href="{% url 'add_to_cart' product.id %}" style="background:#222; color:#fff; padding:12px 18px; text-decoration:none; border-radius:10px;">Add to Cart</a>
+            {% if user.is_staff %}
+                <a href="{% url 'product_update' product.id %}" style="background:#e91e63; color:#fff; padding:12px 18px; text-decoration:none; border-radius:10px;">Edit Product</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

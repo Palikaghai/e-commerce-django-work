@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width:900px; margin:40px auto; display:flex; gap:30px;">
+    <div style="flex:1; background:#fff; padding:20px; border-radius:12px;">
+        <h2 style="margin-top:0;">Checkout</h2>
+        <h4>Order Summary</h4>
+        <ul style="list-style:none; padding:0;">
+            {% for item in cart_items %}
+                <li style="padding:10px 0; border-bottom:1px solid #f5f5f5; display:flex; justify-content:space-between;">
+                    <div>
+                        <strong>{{ item.product.brand }}</strong><br><small>{{ item.product.name }}</small>
+                    </div>
+                    <div>
+                        <span>{{ item.quantity }} x ₹{{ item.product.price }}</span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <div style="text-align:right; margin-top:15px;">
+            <h3>Grand Total: <span style="color:#e91e63;">₹{{ grand_total }}</span></h3>
+        </div>
+    </div>
+
+    <div style="width:380px; background:#fff; padding:20px; border-radius:12px;">
+        <h3 style="margin-top:0;">Payment</h3>
+        <form method="post" id="checkoutForm">
+            {% csrf_token %}
+            <div style="margin-bottom:12px;">
+                <label style="display:block; font-weight:700; margin-bottom:6px;">Select Payment Method</label>
+                <label style="display:block; margin-bottom:6px;"><input type="radio" name="payment_method" value="card"> Credit / Debit Card</label>
+                <label style="display:block; margin-bottom:6px;"><input type="radio" name="payment_method" value="upi"> UPI</label>
+                <label style="display:block; margin-bottom:6px;"><input type="radio" name="payment_method" value="cod"> Cash on Delivery</label>
+            </div>
+
+            <div id="cardDetails" style="display:none; margin-bottom:12px;">
+                <label style="display:block; font-weight:700; margin-bottom:6px;">Card Number</label>
+                <input type="text" name="card_number" placeholder="xxxx-xxxx-xxxx-xxxx" style="width:100%; padding:10px; border-radius:6px; border:1px solid #eee;">
+                <div style="display:flex; gap:8px; margin-top:8px;">
+                    <input type="text" name="expiry" placeholder="MM/YY" style="flex:1; padding:10px; border-radius:6px; border:1px solid #eee;">
+                    <input type="text" name="cvv" placeholder="CVV" style="width:90px; padding:10px; border-radius:6px; border:1px solid #eee;">
+                </div>
+            </div>
+
+            <div style="margin-top:18px; display:flex; gap:8px;">
+                <button type="submit" style="flex:1; background:#e91e63; color:#fff; border:none; padding:12px; border-radius:8px; font-weight:700;">Place Order</button>
+                <a href="{% url 'cart_detail' %}" style="padding:12px 16px; border-radius:8px; background:#eee; text-decoration:none; color:#333;">Back to Cart</a>
+            </div>
+        </form>
+        <p style="margin-top:12px; color:#777; font-size:0.9rem;">Your payment is secure. This demo doesn't process real payments.</p>
+    </div>
+</div>
+
+<script>
+    // Smooth interactivity for payment options
+    const radios = document.querySelectorAll('input[name="payment_method"]');
+    const cardDetails = document.getElementById('cardDetails');
+    radios.forEach(r => {
+        r.addEventListener('change', () => {
+            if (r.value === 'card' && r.checked) {
+                cardDetails.style.display = 'block';
+                cardDetails.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else if (r.checked) {
+                cardDetails.style.display = 'none';
+            }
+        });
+    });
+
+    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+        const selected = document.querySelector('input[name="payment_method"]:checked');
+        if (!selected) {
+            e.preventDefault();
+            alert('Please choose a payment method.');
+            return false;
+        }
+        // Simple UX: disable button to prevent double submit
+        e.target.querySelector('button[type="submit"]').disabled = true;
+    });
+</script>
+{% endblock %}

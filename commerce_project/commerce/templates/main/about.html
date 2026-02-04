@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; padding: 60px 20px;">
+    
+    <div style="text-align: center; margin-bottom: 60px;">
+        <h1 style="font-size: 3rem; color: #333; margin-bottom: 20px;">Our Beauty Philosophy</h1>
+        <p style="font-size: 1.2rem; color: #666; line-height: 1.6; max-width: 700px; margin: 0 auto;">
+            At <strong>Glow & Beauty</strong>, we believe that skincare is self-care. 
+            We started with a simple mission: to provide high-quality, scientifically-backed 
+            serums and cosmetics that celebrate your natural skin.
+        </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+        
+        <div style="background: #fff5f8; padding: 30px; border-radius: 15px; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">🌿</div>
+            <h3>Clean Ingredients</h3>
+            <p style="color: #666;">We prioritize vegan and cruelty-free formulas. No parabens, no sulfates—just pure glow.</p>
+        </div>
+
+        <div style="background: #fff5f8; padding: 30px; border-radius: 15px; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">🔬</div>
+            <h3>Expert Formulations</h3>
+            <p style="color: #666;">Our serums and sunscreens are tested for all skin types, from sensitive to oily.</p>
+        </div>
+
+        <div style="background: #fff5f8; padding: 30px; border-radius: 15px; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">✨</div>
+            <h3>Inclusivity</h3>
+            <p style="color: #666;">Beauty belongs to everyone. We design products for every shade and every story.</p>
+        </div>
+
+    </div>
+
+    <div style="margin-top: 80px; display: flex; align-items: center; gap: 40px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+            <div style="background: #eee; height: 400px; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: #999;">
+                
+            </div>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+            <h2 style="font-size: 2.2rem; margin-bottom: 20px;">Why We Started</h2>
+            <p style="color: #555; line-height: 1.8;">
+                Glow & Beauty was born out of a frustration with overpriced, complex routines. 
+                We wanted to strip back the noise and offer essential products like our signature 
+                Vitamin C serum and SPF 50 sunscreen—products that actually work.
+            </p>
+            <p style="color: #555; line-height: 1.8;">
+                Today, we serve thousands of customers who trust us with their morning and evening rituals.
+            </p>
+            <a href="{% url 'product_list' %}" style="display: inline-block; margin-top: 20px; background: #e91e63; color: white; padding: 12px 30px; text-decoration: none; border-radius: 30px; font-weight: bold;">Explore the Shop</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

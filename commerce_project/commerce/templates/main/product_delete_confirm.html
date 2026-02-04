@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width:600px; margin:40px auto; padding:20px; background:#fff; border-radius:12px; text-align:center;">
+    <h3>Are you sure you want to delete <strong>{{ product.name }}</strong>?</h3>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" style="background:#f44336; color:#fff; padding:10px 18px; border:none; border-radius:8px; margin-right:12px;">Delete</button>
+        <a href="{% url 'admin_dashboard' %}" style="padding:10px 18px; border-radius:8px; background:#eee; text-decoration:none; color:#333;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

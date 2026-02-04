@@ -1,0 +1,26 @@
+{% if orders %}
+<table class="db-table">
+    <thead>
+        <tr><th>Order</th><th>User</th><th>Items</th><th>Payment</th><th>Total</th><th>Date</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+    {% for o in orders %}
+        <tr>
+            <td>#{{ o.id }}</td>
+            <td>{% if o.user %}{{ o.user.email }}{% else %}Guest{% endif %}</td>
+            <td>
+                {% for it in o.items.all %}
+                    <div>{{ it.product.brand }} - {{ it.product.name }} <strong>x{{ it.quantity }}</strong></div>
+                {% endfor %}
+            </td>
+            <td>{{ o.get_payment_method_display }}</td>
+            <td>₹{{ o.total }}</td>
+            <td>{{ o.created_at|date:'Y-m-d H:i' }}</td>
+            <td>{{ o.get_status_display }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No orders yet.</p>
+{% endif %}

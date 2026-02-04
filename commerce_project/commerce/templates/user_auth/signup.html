@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section style="background: #fffcfd; padding: 100px 20px; text-align: center;">
+    {% if user.is_authenticated %}
+        <h1 style="font-size: 2.8rem; color: #222; margin-bottom: 10px; font-weight: 700;">Welcome, {{ user.username }}</h1>
+        <p style="font-size: 1.1rem; color: #888; margin-bottom: 30px;">Your personalized glow-up routine is ready.</p>
+        <a href="{% url 'cart_detail' %}" style="background: #222; color: white; padding: 14px 30px; border-radius: 4px; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase;">View Cart</a>
+    {% else %}
+        <h1 style="font-size: 3.2rem; color: #222; margin-bottom: 20px; font-weight: 800; letter-spacing: -1px;">Effortless Radiance.</h1>
+        <p style="font-size: 1.2rem; color: #777; max-width: 550px; margin: 0 auto 40px; line-height: 1.8;">High-performance skincare formulated for your unique glow. Clean, effective, and delivered to you.</p>
+        <div style="display: flex; justify-content: center; gap: 25px;">
+            <a href="{% url 'signup' %}" style="background: #e91e63; color: white; padding: 16px 40px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Join the Club</a>
+            <a href="{% url 'login' %}" style="color: #222; font-weight: bold; text-decoration: none; padding: 16px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Sign In</a>
+        </div>
+    {% endif %}
+</section>
+
+<div style="max-width: 600px; margin: -30px auto 80px; padding: 0 20px;">
+    <form action="{% url 'product_list' %}" method="get" style="display: flex; background: white; padding: 5px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); border-radius: 8px;">
+        <input type="text" name="q" placeholder="What are you looking for?" style="flex: 1; border: none; padding: 15px 25px; outline: none; font-size: 1rem; color: #444;">
+        <button type="submit" style="background: none; border: none; color: #e91e63; padding: 0 25px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 0.8rem;">Search</button>
+    </form>
+</div>
+
+<div style="max-width: 1100px; margin: 0 auto 100px; padding: 0 5%;">
+    <h2 style="text-align: center; font-size: 1.5rem; color: #222; margin-bottom: 50px; text-transform: uppercase; letter-spacing: 2px; font-weight: 400;">Shop By <span style="font-weight: 700;">Skin Type</span></h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 40px; justify-items: center;">
+        {% for skin in skin_types %}
+            <a href="{% url 'product_list' %}?skin_type={{ skin.name }}" style="text-decoration: none; text-align: center; group">
+                <div style="transition: all 0.4s ease;">
+                    <img src="{{ skin.img }}" alt="{{ skin.name }}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; filter: grayscale(20%); transition: 0.4s;" onmouseover="this.style.filter='grayscale(0%)'; this.style.transform='scale(1.05)';" onmouseout="this.style.filter='grayscale(20%)'; this.style.transform='scale(1)';" >
+                    <h5 style="margin-top: 15px; color: #555; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;">{{ skin.name }}</h5>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<div style="max-width: 1200px; margin: 0 auto 100px; padding: 0 5%;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 40px;">
+        <h2 style="margin: 0; font-size: 1.8rem; color: #222; font-weight: 700;">Trending</h2>
+        <a href="{% url 'product_list' %}" style="color: #888; text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Shop All →</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px;">
+        {% for product in trending %}
+            <div style="background: transparent; transition: 0.4s; display: flex; flex-direction: column;">
+                <a href="{% url 'product_detail' product.id %}" style="text-decoration: none;">
+                    <div style="width: 100%; aspect-ratio: 4/5; background: #f8f8f8; overflow: hidden; margin-bottom: 20px;">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" style="width: 100%; height: 100%; object-fit: cover; transition: 0.6s;" onmouseover="this.style.transform='scale(1.08)';" onmouseout="this.style.transform='scale(1)';" >
+                        {% else %}
+                            <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #ccc;">No Image</div>
+                        {% endif %}
+                    </div>
+                </a>
+
+                <div style="padding: 0 5px;">
+                    <span style="color: #e91e63; font-weight: 600; text-transform: uppercase; font-size: 0.65rem; letter-spacing: 1.5px;">{{ product.brand }}</span>
+                    <h4 style="margin: 8px 0; color: #222; font-size: 1.1rem; font-weight: 500; height: 1.4em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ product.name }}</h4>
+                    <p style="font-weight: 400; font-size: 1rem; color: #666; margin-bottom: 15px;">₹{{ product.price }}</p>
+                    
+                    <a href="{% url 'add_to_cart' product.id %}" style="display: block; text-align: center; text-decoration: none; background: #222; color: white; padding: 12px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;" onmouseover="this.style.background='#e91e63'" onmouseout="this.style.background='#222'">Add to Bag</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div style="background-color: #fcfcfc; padding: 100px 5%;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <h2 style="text-align: center; font-size: 1.5rem; margin-bottom: 60px; text-transform: uppercase; letter-spacing: 2px; font-weight: 400;">Shop By <span style="font-weight: 700;">Concern</span></h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            {% for category in categories %}
+                <a href="{% url 'product_list' %}?category={{ category.id }}" style="text-decoration: none; color: inherit;">
+                    <div style="background: white; padding: 50px 20px; text-align: center; transition: 0.3s;" onmouseover="this.style.boxShadow='0 10px 30px rgba(0,0,0,0.05)';" onmouseout="this.style.boxShadow='none';">
+                        <div style="font-size: 2.5rem; margin-bottom: 20px; opacity: 0.8;">
+                            {% if "Sun" in category.name %}☀️{% elif "Serum" in category.name %}🧪{% elif "Wash" in category.name %}🧼{% elif "Lipsticks" in category.name %}💄{% elif "Deodorants" in category.name %}🧴{% elif "SkinCare" in category.name %}🧖🏻‍♀️{% else %}🫧{% endif %}
+                        </div>
+                        <h3 style="margin: 0; font-size: 0.9rem; color: #222; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">{{ category.name }}</h3>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

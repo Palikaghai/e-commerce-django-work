@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glow & Beauty | Health & Beauty</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; }
+        
+        /* Navigation Styling */
+        nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 5%; 
+            background: #fff; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo { font-size: 24px; font-weight: bold; color: #e91e63; text-decoration: none; }
+        .nav-links a { margin: 0 15px; text-decoration: none; color: #555; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: #e91e63; }
+        
+        .auth-buttons { display: flex; align-items: center; gap: 15px; }
+        .btn-signup { background: #e91e63; color: white !important; padding: 8px 20px; border-radius: 25px; }
+        .cart-icon { font-size: 20px; text-decoration: none; position: relative; }
+        .cart-count { 
+            position: absolute; top: -10px; right: -10px; 
+            background: #333; color: white; font-size: 11px; 
+            padding: 2px 6px; border-radius: 50%; 
+        }
+
+        /* Brands & Testimonials Styles */
+        .brands-testimonials { max-width:1200px; margin: 60px auto; padding: 0 5%; display:grid; grid-template-columns: 1fr 1fr; gap:30px; align-items:center; }
+        .brands { }
+        .brand-list { display:flex; gap:15px; flex-wrap:wrap; }
+        .brand-card { background:#fff; padding:12px 18px; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.04); transition:transform .2s, box-shadow .2s; font-weight:700; color:#555; }
+        .brand-card:hover { transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,0.08); }
+
+        .testimonials { }
+        .testimonials .box { background:#fff; padding:24px; border-radius:12px; min-height:120px; display:flex; flex-direction:column; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.05); }
+        .testimonial-slider { position:relative; overflow:hidden; }
+        .testimonial-slider .slides { display:flex; transition:transform .5s ease; gap:20px; }
+        .testimonial { min-width:100%; padding:10px 20px; box-sizing:border-box; }
+        .testimonial p { margin:0; color:#333; line-height:1.5; font-size:1rem; }
+        .testimonial .author { margin-top:12px; color:#777; font-size:0.9rem; }
+        .testimonial-controls { display:flex; align-items:center; justify-content:center; gap:12px; margin-top:12px; }
+        .testimonial-controls button { background:#fff; border:1px solid #eee; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:1.2rem; }
+        .dots { display:flex; gap:8px; }
+        .dot { width:8px; height:8px; background:#ddd; border-radius:50%; cursor:pointer; }
+        .dot.active { background:#e91e63; }
+
+        /* footer testimonial */
+        .footer-testimonials { background:#fff; padding:18px; border-top: 1px solid #eee; display:flex; align-items:center; justify-content:center; gap:20px; }
+
+        footer { text-align: center; padding: 30px 20px; background: #f9f9f9; margin-top: 30px; border-top: 1px solid #eee; color:#555; }
+
+        @media (max-width: 700px) {
+            .brands-testimonials { grid-template-columns: 1fr; padding: 0 20px; }
+            .testimonial-controls { justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="{% url 'home' %}" class="logo">GLOW & BEAUTY</a>
+
+        <div class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'product_list' %}">Shop All</a>
+            <a href="{% url 'about' %}">About Us</a> </div>
+
+        <div class="auth-buttons">
+            <a href="#" class="cart-icon">
+                🛒<span class="cart-count">0</span>
+            </a>
+            
+            {% if user.is_authenticated %}
+                <div class="profile" style="position:relative; display:flex; align-items:center; gap:10px;">
+                    <div class="avatar" id="profileToggle" title="Account" style="width:36px; height:36px; border-radius:50%; background:#e91e63; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; cursor:pointer;">{{ user.username|slice:":1"|upper }}</div>
+                    <div style="font-size: 14px;">Welcome, <strong>{{ user.username }}</strong></div>
+                    <div class="profile-menu" id="profileMenu" style="display:none; position:absolute; right:0; top:48px; background:#fff; border-radius:8px; padding:10px; box-shadow:0 10px 30px rgba(0,0,0,0.08); min-width:200px; z-index:1500;">
+                        <a href="{% url 'account_orders' %}" style="display:block; padding:8px 6px; text-decoration:none; color:#333;">My Orders</a>
+                        <a href="{% url 'account_wishlist' %}" style="display:block; padding:8px 6px; text-decoration:none; color:#333;">My Wishlist</a>
+                        {% if user.is_staff %}<a href="{% url 'admin_dashboard' %}" style="display:block; padding:8px 6px; text-decoration:none; color:#e91e63;">Admin</a>{% endif %}
+                        <form action="{% url 'logout' %}" method="post" style="margin:6px 0 0 0;">
+                            {% csrf_token %}
+                            <button type="submit" style="background:#fff; border:1px solid #eee; padding:8px 10px; width:100%; border-radius:6px; cursor:pointer;">Logout</button>
+                        </form>
+                    </div>
+                </div>
+                <script>document.getElementById('profileToggle').addEventListener('click',(e)=>{e.stopPropagation(); const m=document.getElementById('profileMenu'); m.style.display = (m.style.display==='block'?'none':'block');}); document.addEventListener('click',()=>{const m=document.getElementById('profileMenu'); if(m) m.style.display='none';});</script>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'signup_page' %}" class="btn-signup">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div style="max-width:1100px; margin: 15px auto; padding: 0 20px;">
+        {% for message in messages %}
+            <div style="padding:10px 15px; border-radius:8px; margin-bottom:10px; background:#fff; border-left:6px solid {% if message.tags == 'success' %}#4caf50{% elif message.tags == 'error' or message.tags == 'danger' %}#f44336{% else %}#2196f3{% endif %}; box-shadow:0 6px 20px rgba(0,0,0,0.04);">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Signup Modal -->
+    <div id="signupModal" style="display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center;">
+        <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4);" id="signupModalBg"></div>
+        <div style="width:420px; background:#fff; border-radius:12px; padding:20px; box-shadow:0 40px 80px rgba(0,0,0,0.15); position:relative; z-index:2001;">
+            <h3 style="margin-top:0;">Create Account</h3>
+            <form id="signupModalForm" method="post" action="{% url 'signup_ajax' %}">
+                {% csrf_token %}
+                <div style="display:flex; gap:8px;">
+                    <input name="name" placeholder="Full name" style="flex:1; padding:10px; border:1px solid #eee; border-radius:6px;" required>
+                </div>
+                <div style="margin-top:8px;"><input name="email" placeholder="Email" style="width:100%; padding:10px; border:1px solid #eee; border-radius:6px;" required></div>
+                <div style="margin-top:8px;"><input name="country" placeholder="Country" style="width:100%; padding:10px; border:1px solid #eee; border-radius:6px;"></div>
+                <div style="margin-top:8px;"><input name="phone" placeholder="Phone number" style="width:100%; padding:10px; border:1px solid #eee; border-radius:6px;"></div>
+                <div style="display:flex; gap:8px; margin-top:8px;">
+                    <input name="password1" type="password" placeholder="Password" style="flex:1; padding:10px; border:1px solid #eee; border-radius:6px;" required>
+                    <input name="password2" type="password" placeholder="Confirm" style="width:120px; padding:10px; border:1px solid #eee; border-radius:6px;" required>
+                </div>
+
+                <div id="signupErrors" style="color:#f44336; margin-top:10px; display:none;"></div>
+
+                <div style="display:flex; gap:8px; margin-top:14px;">
+                    <button id="signupSubmit" style="flex:1; background:#e91e63; color:#fff; padding:10px 12px; border:none; border-radius:8px; font-weight:700;">Create Account</button>
+                    <button type="button" id="signupClose" style="padding:10px 12px; border:1px solid #eee; border-radius:8px; background:#fff;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <div class="footer-testimonials" aria-label="Customer testimonials">
+        <div class="testimonial-slider small" id="footerTestimonialSlider">
+            <div class="slides">
+                <div class="testimonial"><p>"Amazing products — my skin has never been happier!"</p><p class="author">— Satisfied Customer</p></div>
+                <div class="testimonial"><p>"Fast delivery and great packaging. Highly recommend!"</p><p class="author">— Ria K.</p></div>
+                <div class="testimonial"><p>"My go-to for daily skincare. Gentle and effective."</p><p class="author">— Priya S.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Glow & Beauty Essentials. All rights reserved.</p>
+    </footer>
+
+<script>
+    // Modal open/close handlers
+    function openSignupModal() {
+        document.getElementById('signupModal').style.display = 'flex';
+        document.getElementById('signupErrors').style.display = 'none';
+    }
+    function closeSignupModal() {
+        document.getElementById('signupModal').style.display = 'none';
+    }
+    document.getElementById('signupClose').addEventListener('click', closeSignupModal);
+    document.getElementById('signupModalBg').addEventListener('click', closeSignupModal);
+
+    // open triggers
+    const openBtns = [document.getElementById('openSignup')];
+    if (document.getElementById('openSignupInline')) openBtns.push(document.getElementById('openSignupInline'));
+    if (document.getElementById('openSignupInline2')) openBtns.push(document.getElementById('openSignupInline2'));
+    openBtns.forEach(btn => { if (btn) btn.addEventListener('click', (e)=>{ e.preventDefault(); openSignupModal(); }); });
+
+    // CSRF helper
+    function getCookie(name) {
+        const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return v ? v.pop() : '';
+    }
+
+    document.getElementById('signupModalForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const data = new FormData(form);
+        const errorsEl = document.getElementById('signupErrors');
+        errorsEl.style.display = 'none'; errorsEl.innerHTML = '';
+
+        // client-side password match quick check
+        if (data.get('password1') !== data.get('password2')) {
+            errorsEl.style.display = 'block';
+            errorsEl.innerText = 'Passwords do not match.';
+            return;
+        }
+
+        try {
+            const res = await fetch(form.action, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: data
+            });
+
+            const json = await res.json();
+            if (!json.success) {
+                errorsEl.style.display = 'block';
+                errorsEl.innerHTML = (json.errors || ['Signup failed']).join('<br>');
+                return;
+            }
+
+            // success: redirect or reload
+            window.location.href = json.redirect || '/';
+        } catch (err) {
+            errorsEl.style.display = 'block';
+            errorsEl.innerText = 'An error occurred. Please try again.';
+            console.error(err);
+        }
+    });
+
+    // Ensure non-AJAX forms use the latest CSRF cookie value on submit.
+    // This fixes "CSRF token from POST incorrect" when the token is rotated after a login in another tab.
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(ev) {
+            try {
+                const token = getCookie('csrftoken');
+                let csrfInput = this.querySelector('input[name="csrfmiddlewaretoken"]');
+                if (csrfInput) {
+                    csrfInput.value = token;
+                } else if ((this.method || '').toLowerCase() === 'post') {
+                    csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = token;
+                    this.appendChild(csrfInput);
+                }
+            } catch (e) {
+                console.error('Error updating CSRF token on submit', e);
+            }
+        });
+    });
+
+    // --- Testimonial slider initialization ---
+    function createTestimonialSlider(containerId, opts = {}) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const slidesEl = container.querySelector('.slides');
+        if (!slidesEl) return;
+        const slides = slidesEl.children;
+        let index = 0;
+        const total = slides.length;
+        const dotsContainer = document.getElementById(containerId === 'testimonialSlider' ? 'testimonialDots' : null);
+
+        function go(i) {
+            index = (i + total) % total;
+            slidesEl.style.transform = 'translateX(' + (-index * 100) + '%)';
+            if (dotsContainer) [...dotsContainer.children].forEach((d,k)=> d.classList.toggle('active', k===index));
+        }
+
+        // create dots and controls for main slider only
+        if (containerId === 'testimonialSlider' && dotsContainer) {
+            for (let i=0;i<total;i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i===0 ? ' active' : '');
+                dot.addEventListener('click', ()=> go(i));
+                dotsContainer.appendChild(dot);
+            }
+            const prevBtn = document.getElementById('prevTestimonial');
+            const nextBtn = document.getElementById('nextTestimonial');
+            if (prevBtn) prevBtn.addEventListener('click', ()=> go(index-1));
+            if (nextBtn) nextBtn.addEventListener('click', ()=> go(index+1));
+        }
+
+        let interval = setInterval(()=> go(index+1), 3500);
+        container.addEventListener('mouseenter', ()=> clearInterval(interval));
+        container.addEventListener('mouseleave', ()=> interval = setInterval(()=> go(index+1), 3500));
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=> {
+        createTestimonialSlider('testimonialSlider');
+        createTestimonialSlider('footerTestimonialSlider');
+    });
+</script>
+</body>
+</html>

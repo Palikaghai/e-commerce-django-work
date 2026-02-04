@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width:1100px; margin:40px auto; padding:20px;">
+    <h2>My Wishlist</h2>
+    {% if wishlist %}
+        <div style="display:grid; gap:12px; margin-top:18px;">
+            {% for w in wishlist %}
+                <div style="background:#fff; padding:14px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 8px 20px rgba(0,0,0,0.04);">
+                    <div>
+                        <strong>{{ w.product.brand }} - {{ w.product.name }}</strong>
+                        <div style="color:#777;">₹{{ w.product.price }}</div>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <a href="{% url 'product_detail' w.product.id %}" style="padding:8px 12px; border-radius:8px; background:#fff; border:1px solid #eee; text-decoration:none; color:#333;">View</a>
+                        <a href="{% url 'add_to_cart' w.product.id %}" style="padding:8px 12px; border-radius:8px; background:#e91e63; color:#fff; text-decoration:none;">Add to Cart</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Your wishlist is empty.</p>
+    {% endif %}
+</div>
+{% endblock %}
