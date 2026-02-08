@@ -11,6 +11,8 @@
 * About Us
 <img width="1901" height="1048" alt="image" src="https://github.com/user-attachments/assets/e4c03f93-8dfb-4146-8059-d80f7c4e4d00" />
 
+* Landing Page
+<img width="1919" height="1073" alt="image" src="https://github.com/user-attachments/assets/0e623574-d7b3-41a7-8607-50eda0e616c3" />
 
 
 
